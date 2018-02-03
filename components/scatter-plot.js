@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import * as d3 from 'd3'
+import _ from 'lodash'
 
 export default class ScatterPlot extends React.Component {
 
@@ -13,18 +14,24 @@ export default class ScatterPlot extends React.Component {
   }
 
   renderD3() {
-    console.log('renderD3');
-    const data = this.props.data || [];
+    const unfilteredData = this.props.data || [];
     const { xVariable, yVariable } = this.props
 
     // Do not render if no variable is selected
-    if(typeof xVariable === 'undefined' || typeof yVariable === 'undefined')
+    if(_.isNil(xVariable) || _.isNil(yVariable))
       return;
+
+    const data = _.map(unfilteredData, (d) => (
+      {
+        [xVariable]: Number(d[xVariable]),
+        [yVariable]: Number(d[yVariable])
+      }
+    ))
 
     var svg = d3.select(this.svgRef)
     svg.selectAll("*").remove();
 
-    var margin = {top: 40, right: 20, bottom: 30, left: 30},
+    var margin = {top: 40, right: 20, bottom: 30, left: 40},
       width = 900 - margin.left - margin.right,
       height = 400 - margin.top - margin.bottom
 
@@ -53,8 +60,15 @@ export default class ScatterPlot extends React.Component {
       .style("opacity", 0);
 
     // don't want dots overlapping axis, so add in buffer to data domain
-    xScale.domain([d3.min(data, xValue) - 1, d3.max(data, xValue) + 1])
-    yScale.domain([d3.min(data, yValue) - 1, d3.max(data, yValue) + 1])
+    var minX = d3.min(data, xValue)
+    var maxX = d3.max(data, xValue)
+    var minY = d3.min(data, yValue)
+    var maxY = d3.max(data, yValue)
+    var deltaX = Math.min(Math.abs(maxX - minX) * 0.1, 1.0)
+    var deltaY = Math.min(Math.abs(maxY - minY) * 0.1, 1.0)
+    
+    xScale.domain([minX - deltaX, maxX + deltaX])
+    yScale.domain([minY - deltaY, maxY + deltaY])
 
     // x-axis
     g.append("g")

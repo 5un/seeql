@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import * as d3 from 'd3'
+import _ from 'lodash'
 
 export default class Histogram extends React.Component {
 
@@ -9,7 +10,8 @@ export default class Histogram extends React.Component {
     }
 
     renderD3() {
-        const data = this.props.data || [];
+        const unfilteredData = this.props.data || [];
+        const data = _.map(unfilteredData, Number)
 
         var formatCount = d3.format(",.0f");
         
@@ -22,13 +24,17 @@ export default class Histogram extends React.Component {
             g = svg.append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
+        var minX = d3.min(data)
+        var maxX = d3.max(data)
+        var delta = Math.abs(maxX - minX) * 0.05
+
         var x = d3.scaleLinear()
-            .domain([d3.min(data), d3.max(data)])
+            .domain([minX - delta, maxX + delta])
             .rangeRound([0, width])
 
         var bins = d3.histogram()
             .domain(x.domain())
-            .thresholds(x.ticks(20))
+            .thresholds(x.ticks(10))
             (data);
 
         var y = d3.scaleLinear()
