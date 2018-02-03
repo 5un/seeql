@@ -1,0 +1,58 @@
+[
+  {
+    "name": "P. Name",
+    "type": "string"
+  },
+  {
+    "name": "P. Name Kepler",
+    "type": "string"
+  },
+  {
+    "name": "P. Name KOI",
+    "type": "string"
+  }, 
+  {
+    "name": "P. Zone Class",
+    "type": "categorical"
+  },
+  {
+    "name": "P. Mass Class",
+    "type": "categorical"
+  },
+  {
+    "name": "P. Composition Class",
+    "type": "categorical"
+  },
+  {
+    "name": "P. Atmosphere Class",
+    "type": "categorical"
+  },
+  {
+    "name": "P. Habitable Class",
+    "type": "categorical"
+  },
+  {
+    "name": "S. Name",
+    "type": "string"
+  },
+  {
+    "name": "S. Name HD",
+    "type": "string"
+  },
+  {
+    "name": "S. Name HIP",
+    "type": "string"
+  },
+  {
+    "name": "S. Constellation",
+    "type": "categorical"
+  },
+  {
+    "name": "S. Type",
+    "type": "categorical"
+  },
+  {
+    "name": "P. Disc. Method",
+    "type": "categorical"
+  }
+]
