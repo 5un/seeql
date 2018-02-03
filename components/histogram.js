@@ -16,14 +16,15 @@ export default class Histogram extends React.Component {
         var svg = d3.select(ReactDOM.findDOMNode(this.svgRef))
         svg.selectAll("*").remove();
 
-        var margin = { top: 10, right: 30, bottom: 18, left: 10 },
-            width = +svg.attr("width") - margin.left - margin.right,
-            height = +svg.attr("height") - margin.top - margin.bottom,
+        var margin = { top: 10, right: 50, bottom: 18, left: 10 },
+            width = svg.attr("width") - margin.left - margin.right,
+            height = svg.attr("height") - margin.top - margin.bottom,
             g = svg.append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
         var x = d3.scaleLinear()
-            .rangeRound([0, width]);
+            .domain([d3.min(data), d3.max(data)])
+            .rangeRound([0, width])
 
         var bins = d3.histogram()
             .domain(x.domain())
@@ -51,14 +52,14 @@ export default class Histogram extends React.Component {
         g.append("g")
             .attr("class", "axis axis--x")
             .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(x))
+            .call(d3.axisBottom(x).ticks(6))
             
     }
 
     render() {
         return (
             <div>
-                <svg width="200" height="60" ref={(r) => {this.svgRef = r}}></svg>
+                <svg width="240" height="60" ref={(r) => {this.svgRef = r}}></svg>
             </div>
         );
     }

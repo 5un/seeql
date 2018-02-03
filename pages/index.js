@@ -84,7 +84,7 @@ export default class Index extends React.Component {
 
             {variableSelected &&
               <Container>
-                <H2>{xSelectedVariable} v. {ySelectedVariable}</H2>
+                <H2>{xSelectedVariable} <SecondaryText> vs. </SecondaryText> {ySelectedVariable}</H2>
                 <ScatterPlot 
                   data={data}
                   xVariable={xSelectedVariable}

@@ -4,7 +4,7 @@ import * as d3 from 'd3'
 
 export default class ScatterPlot extends React.Component {
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidMount() {
     this.renderD3();
   }
 
@@ -13,6 +13,7 @@ export default class ScatterPlot extends React.Component {
   }
 
   renderD3() {
+    console.log('renderD3');
     const data = this.props.data || [];
     const { xVariable, yVariable } = this.props
 
@@ -20,16 +21,11 @@ export default class ScatterPlot extends React.Component {
     if(typeof xVariable === 'undefined' || typeof yVariable === 'undefined')
       return;
 
-    // add the graph canvas to the body of the webpage
-    const node = this.node
-
-    //var svg = d3.select(ReactDOM.findDOMNode(this.svgRef))
     var svg = d3.select(this.svgRef)
     svg.selectAll("*").remove();
-    //var svg = d3.select(this.node);
 
     var margin = {top: 40, right: 20, bottom: 30, left: 30},
-      width = 960 - margin.left - margin.right,
+      width = 900 - margin.left - margin.right,
       height = 400 - margin.top - margin.bottom
 
     // setup x 
@@ -99,6 +95,13 @@ export default class ScatterPlot extends React.Component {
       .attr("cx", xMap)
       .attr("cy", yMap)
       .style("fill", "#592FE4")
+      .on("mouseover", function(d) {
+          d3.select(this).style("fill", "red");
+          console.log(d);
+        })  
+      .on("mouseout", function(d) {
+        d3.select(this).style("fill", "#592FE4");
+      });
       
   }
 

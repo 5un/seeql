@@ -25,6 +25,7 @@ export default class AxisSelect extends React.Component {
     return (
       <div>
         <Select value={selectedVariable} onChange={this.handleChange.bind(this)} >
+          <option value="">(Please Select)</option>
           {variables.map(item => (
             <option key={item} value={item}>{item}</option>
           ))}
