@@ -27,6 +27,13 @@ export const NavTitle = styled.h1`
   text-transform: uppercase;
 `
 
+export const BrandingIcon = styled.img`
+  max-width: 25px;
+  max-height: 25px;
+  vertical-align: middle;
+`
+
+
 export const A = styled.a`
   color: inherit;
   &:hover {

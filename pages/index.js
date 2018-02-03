@@ -4,8 +4,9 @@ import ReactDOM from 'react-dom'
 import Link from 'next/link'
 import superagent from 'superagent'
 import { csvParse } from 'd3-dsv'
-import { parseColumnNames } from '../lib/helpers'
-import { Container, Row, Col, Nav, NavTitle, Section, Label, H2, SecondaryText } from '../components/elements'
+import { parseColumnNames, filterNumericColumnNames } from '../lib/helpers'
+import { Container, Row, Col, Nav, NavTitle, Section, 
+          Label, H2, SecondaryText, PadBox, BrandingIcon } from '../components/elements'
 import AxisSelect from '../components/axis-select'
 import Histogram from '../components/histogram'
 import ScatterPlot from '../components/scatter-plot'
@@ -28,8 +29,7 @@ export default class Index extends React.Component {
     superagent.get('/static/data/phl_hec_all_confirmed.csv')
       .then(res => {
         const data = csvParse(res.text)
-        const variables = parseColumnNames(res.text)
-
+        const variables = filterNumericColumnNames(parseColumnNames(res.text))
         this.setState({ loading: false, data, variables })
       })
       .catch(err => {
@@ -56,7 +56,7 @@ export default class Index extends React.Component {
         <style jsx global>{globalCss}</style>
         <Nav>
           <NavTitle>
-            Exoplanet Data Explorer
+            <BrandingIcon src="/static/images/icons8-telescope-100.png"/> Exoplanet Data Explorer
           </NavTitle>
         </Nav>
         {!loading &&
@@ -93,7 +93,9 @@ export default class Index extends React.Component {
             }
 
             {!variableSelected &&
-              <SecondaryText>Please select x-axis and y-axis variables</SecondaryText>
+              <PadBox>
+                <SecondaryText>Please select x-axis and y-axis variables</SecondaryText>
+              </PadBox>
             }
           </div>
         }
