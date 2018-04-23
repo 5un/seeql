@@ -1,21 +1,27 @@
 {
-  "name": "noodleai-exoplanet",
+  "name": "seeql",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "next"
+    "dev": "next",
+    "build": "next build",
+    "start": "next start",
+    "export": "next export"
   },
   "author": "Soravis Prakkamakul",
   "license": "MIT",
   "dependencies": {
+    "brace": "^0.11.1",
     "d3": "^4.13.0",
     "d3-dsv": "^1.0.8",
     "lodash": "^4.17.4",
     "next": "^4.2.3",
     "react": "^16.2.0",
+    "react-ace": "^6.0.0",
     "react-dom": "^16.2.0",
+    "react-table": "^6.8.2",
     "styled-components": "^3.1.5",
     "superagent": "^3.8.2"
   },

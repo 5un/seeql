@@ -1,16 +1,17 @@
 export default `
-@import url('https://fonts.googleapis.com/css?family=Poppins:300,600');
+@import url('https://fonts.googleapis.com/css?family=Work+Sans:300,600');
 
 html {
   box-sizing: border-box;
 }
 *, *:before, *:after {
+  box-sizing: border-box;
   box-sizing: inherit;
 }
 
 body { 
-    font-family: 'Poppins', sans-serif;
-    font-size: 16px;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 14px;
     background: white;
     color: #444;
     border: 0;
@@ -18,4 +19,5 @@ body {
     margin: 0;
 
 }
+
 `

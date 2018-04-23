@@ -15,8 +15,8 @@ export const Col = styled.div`
 `
 
 export const Nav = styled.nav`
-  background-color: #592FE4;
-  color: white;
+  background-color: #FFF700;
+  color: #444444;
   padding: 20px;
 `
 
@@ -181,4 +181,18 @@ export const ShadowBox = styled.div`
 
 export const PadBox = styled.div`
   padding: 20px;
+`
+
+export const QueryContainer = styled.div`
+  display: inline-block;
+  width: 800px;
+  height: 300px;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); 
+  overflow: hidden;
+`
+
+export const MainContainer = styled.div`
+  text-align: left;
+  width: 800px;
 `
