@@ -1,6 +1,6 @@
 const functions = require('firebase-functions');
 const BigQuery = require('@google-cloud/bigquery');
-
+const _ = require('lodash');
 // Your Google Cloud Platform project ID
 const projectId = 'see-ql';
 
@@ -27,7 +27,7 @@ exports.executeQuery = functions.https.onRequest((request, response) => {
     const data = [];
     bigquery.createQueryStream(query)
       .on('error',(err) => {
-        response.send({ error: err });
+        response.send({ error: err })
       } )
       .on('data', (row) => {
         data.push(row);
@@ -35,5 +35,29 @@ exports.executeQuery = functions.https.onRequest((request, response) => {
       .on('end', () => {
         response.send(data)
       });
+  });
+});
+
+exports.getSchema = functions.https.onRequest((request, response) => {
+  cors(request, response, () => {
+    const publicBigQuery = new BigQuery({ projectId: 'bigquery-public-data' })
+    const dataset = publicBigQuery.dataset('samples')
+    dataset.getTables((err, tables) => {
+      if(err) {
+        response.send({ error: err })
+      } else {
+        Promise.all(tables.map(t => t.getMetadata()))
+          .then((results) => {
+            // console.log(results);
+            const tablesInfo = results.map(
+              r => _.pick(r[0], ['id', 'schema', 'numRows'])
+            )
+            response.send(tablesInfo)
+          });
+        // console.log(tables.map(t => t.id));
+        // response.send(tables)
+      }
+      
+    });
   });
 });

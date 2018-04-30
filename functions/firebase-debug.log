@@ -1,0 +1,29 @@
+[debug] [2018-04-30T18:58:27.232Z] ----------------------------------------------------------------------
+[debug] [2018-04-30T18:58:27.238Z] Command:      /usr/local/Cellar/nvm/0.32.0/versions/node/v6.10.0/bin/node /usr/local/opt/nvm/versions/node/v6.10.0/bin/firebase serve --only functions
+[debug] [2018-04-30T18:58:27.239Z] CLI Version:  3.9.1
+[debug] [2018-04-30T18:58:27.239Z] Platform:     darwin
+[debug] [2018-04-30T18:58:27.239Z] Node Version: v6.10.0
+[debug] [2018-04-30T18:58:27.239Z] Time:         Mon Apr 30 2018 11:58:27 GMT-0700 (PDT)
+[debug] [2018-04-30T18:58:27.240Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-04-30T18:58:27.287Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-04-30T18:58:27.288Z] > authorizing via signed-in user
+[debug] [2018-04-30T18:58:27.293Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/see-ql  
+ Mon Apr 30 2018 11:58:27 GMT-0700 (PDT)
+[debug] [2018-04-30T18:58:27.743Z] <<< HTTP RESPONSE 200
+[debug] [2018-04-30T18:58:27.744Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/see-ql/tokens  
+ Mon Apr 30 2018 11:58:27 GMT-0700 (PDT)
+[debug] [2018-04-30T18:58:28.120Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/Users/Sun/Documents/Study/MIMS/Courses/INFO-247/Final Projects/development/seeql'...
+[info] 
+[info] i  functions: Preparing to emulate HTTPS functions. Support for other event types coming soon.
+[debug] [2018-04-30T18:58:29.199Z] >>> HTTP REQUEST GET https://appengine.googleapis.com/v1/apps/see-ql  
+ Mon Apr 30 2018 11:58:29 GMT-0700 (PDT)
+[debug] [2018-04-30T18:58:29.199Z] >>> HTTP REQUEST GET https://apikeys.googleapis.com/v1/projects/see-ql/apiKeys  
+ Mon Apr 30 2018 11:58:29 GMT-0700 (PDT)
+[debug] [2018-04-30T18:58:29.510Z] <<< HTTP RESPONSE 200
+[debug] [2018-04-30T18:58:29.565Z] <<< HTTP RESPONSE 200
+[info] ✔  functions: helloWorld: http://localhost:5002/see-ql/us-central1/helloWorld
+[info] ✔  functions: getSchema: http://localhost:5002/see-ql/us-central1/getSchema
+[info] ✔  functions: executeQuery: http://localhost:5002/see-ql/us-central1/executeQuery

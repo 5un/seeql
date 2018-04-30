@@ -9,6 +9,10 @@ export default class Histogram extends React.Component {
         this.renderD3();
     }
 
+    componentDidMount() {
+        this.renderD3();
+    }
+
     renderD3() {
         const unfilteredData = this.props.data || [];
         const data = _.map(unfilteredData, Number)
@@ -63,9 +67,10 @@ export default class Histogram extends React.Component {
     }
 
     render() {
+        const {width, height} = this.props
         return (
             <div>
-                <svg width="240" height="60" ref={(r) => {this.svgRef = r}}></svg>
+                <svg width={width} height={height} ref={(r) => {this.svgRef = r}}></svg>
             </div>
         );
     }
