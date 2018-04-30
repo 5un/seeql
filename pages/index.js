@@ -1,19 +1,23 @@
 import React from 'react'
-import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom'
+import PropTypes from 'prop-types'
 import Link from 'next/link'
 import superagent from 'superagent'
-import { csvParse } from 'd3-dsv'
+import ReactTable from 'react-table'
+import CodeMirror from 'react-codemirror'
+import _ from 'lodash'
+
 import { parseColumnNames, filterNumericColumnNames } from '../lib/helpers'
 import { Container, Row, Col, Nav, NavTitle, Section, CenterPageWrapper,
-          Label, H2, H3, SecondaryText, PadBox, BrandingIcon, Button, QueryContainer, MainContainer } from '../components/elements'
+          Label, H2, H3, SecondaryText, PadBox, BrandingIcon, Button, 
+          QueryContainer, MainContainer } from '../components/elements'
 import AxisSelect from '../components/axis-select'
 import Histogram from '../components/histogram'
 import ScatterPlot from '../components/scatter-plot'
+
 import globalCss from '../styles/global-css.js'
 import reactTableCss from '../styles/react-table-css.js'
-import ReactTable from "react-table"
-import _ from 'lodash'
+import codeMirrorCss from '../styles/react-codemirror-css.js'
 
 const API_URL = 'https://us-central1-see-ql.cloudfunctions.net'
 
@@ -26,40 +30,56 @@ export default class Index extends React.Component {
       variables: [],
       xPreviewValues: [],
       yPreviewValues: [],
-      isFrontEnd: false
+      isFrontEnd: false,
+      code: "-- Type your Query here\n",
+      codeMirror: null
     }
   }
 
   componentDidMount() {
     if (typeof window != 'undefined') {
       Promise.all([
-        import('brace')
+        import('codemirror/mode/sql/sql'),
+        import('codemirror/addon/hint/show-hint'),
+        import('codemirror/addon/hint/sql-hint')
+
       ]).then(result => {
-        this.setState({ brace: result })
-        return import('react-ace')
-      }).then(result => {
-        console.log(result);
-        this.setState({ AceEditor: result.default })
-        return import('brace/mode/sql')
-      }).then(result => {
-        console.log(result);
-        return import('brace/theme/xcode');
-      }).then(result => {
-        console.log(result);
         console.log('loaded all');
         this.setState({ isFrontEnd: true })
       });
+      // Promise.all([
+      //   import('brace')
+      // ]).then(result => {
+      //   this.setState({ brace: result })
+      //   return import('react-ace')
+      // }).then(result => {
+      //   console.log(result);
+      //   this.setState({ AceEditor: result.default })
+      //   return import('brace/mode/sql')
+      // }).then(result => {
+      //   console.log(result);
+      //   return import('brace/theme/xcode');
+      // }).then(result => {
+      //   console.log(result);
+      //   console.log('loaded all');
+      //   this.setState({ isFrontEnd: true })
+      // });
+    }
+  }
+
+  handleCodeMirrorRef(codeMirrorRef) {
+    if(codeMirrorRef) {
+      const codeMirror = codeMirrorRef.codeMirror
+      if(this.state.codeMirror == null) {
+        this.setState({ codeMirror })
+      }
+      codeMirror.on('keypress', (cm, event) => {
+        cm.showHint({ completeSingle: false })
+
+      })
+
     }
     
-    // superagent.get('/static/data/phl_hec_all_confirmed.csv')
-    //   .then(res => {
-    //     const data = csvParse(res.text)
-    //     const variables = filterNumericColumnNames(parseColumnNames(res.text))
-    //     this.setState({ loading: false, data, variables })
-    //   })
-    //   .catch(err => {
-    //     this.setState({ error: err })
-    //   })
   }
 
   handleVariableChanged(axis, newVariableName) {
@@ -72,6 +92,7 @@ export default class Index extends React.Component {
 
   handleCodeChanged(newValue) {
     console.log('change',newValue);
+    this.setState({ code: newValue });
   }
 
   handleExecuteQueryClicked() {
@@ -88,7 +109,11 @@ export default class Index extends React.Component {
 
   render() {
     const { isFrontEnd, AceEditor, queryResults, queryResultColums } = this.state
-    const allGlobalCss = globalCss + reactTableCss
+    const allGlobalCss = [globalCss, reactTableCss, codeMirrorCss].join('\n');
+    const options = {
+      lineNumbers: true,
+      mode: 'text/x-sql'
+    };
     return (
       <div>
         <style jsx global>{allGlobalCss}</style>
@@ -103,29 +128,26 @@ export default class Index extends React.Component {
             <H3>QUERY</H3><br />
             {isFrontEnd &&
               <QueryContainer>
-                <AceEditor
-                  mode="sql"
-                  theme="xcode"
-                  onChange={this.handleCodeChanged.bind(this)}
-                  name="UNIQUE_ID_OF_DIV"
-                  editorProps={{$blockScrolling: true}}
-                  width="800px"
-                  height="300px"
-                  defaultValue="select * from `github_repos` where username = '5un'"
-                  fontSize={14}
-                  enableBasicAutocompletion={true}
-                  enableLiveAutocompletion={true}
-                  markers={[
-                    { startRow:0, startCol:2, endRow: 0, endCol: 5, className: 'error-marker', type: 'background' }
-                  ]}
-                />
+                <CodeMirror value={this.state.code} onChange={this.handleCodeChanged.bind(this)} options={options} ref={this.handleCodeMirrorRef.bind(this)}/>
               </QueryContainer>
             }
             <br /><br />
             <div>
               <Button onClick={this.handleExecuteQueryClicked.bind(this)}>Execute Query</Button>
             </div>
-            <br />
+            
+            {/*
+              <Highlight className='sql'>
+                <div contentEditable="true" style={{ border: '1px solid gray'}}>
+                  select * from `github_repos` <br />
+                  <div contentEditable="false" style={{ display: 'inline-block', width: '150px', height: '80px'}}></div> 
+                  where username = '5un'
+                </div>
+              </Highlight>
+            */}
+            {/*
+              <Histogram data={[1,2,3,4,4,5,5,6,6,6,7,7,8,8,9,10]}/>
+            */}
             {queryResults && 
               <ReactTable
                 data={queryResults}

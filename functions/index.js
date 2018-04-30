@@ -1,6 +1,14 @@
 const functions = require('firebase-functions');
+const BigQuery = require('@google-cloud/bigquery');
+
+// Your Google Cloud Platform project ID
+const projectId = 'see-ql';
+
 const cors = require('cors')({
   origin: true
+});
+const bigquery = new BigQuery({
+  projectId: projectId,
 });
 
 // // Create and Deploy Your First Cloud Functions
@@ -12,16 +20,8 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
 
 exports.executeQuery = functions.https.onRequest((request, response) => {
   cors(request, response, () => {
-    // Imports the Google Cloud client library
-    const BigQuery = require('@google-cloud/bigquery');
-
-    // Your Google Cloud Platform project ID
-    const projectId = 'see-ql';
-
-    const bigquery = new BigQuery({
-      projectId: projectId,
-    });
-
+    console.log(request.method);
+    console.log(request.body);  
     const query = 'SELECT url FROM `bigquery-public-data.samples.github_nested` LIMIT 100';
 
     const data = [];
