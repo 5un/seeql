@@ -3,6 +3,7 @@ const BigQuery = require('@google-cloud/bigquery');
 const _ = require('lodash');
 // Your Google Cloud Platform project ID
 const projectId = 'see-ql';
+const { generateColumnValuesSuggestionQuery } = require('./helpers')
 
 const cors = require('cors')({
   origin: true
@@ -61,3 +62,58 @@ exports.getSchema = functions.https.onRequest((request, response) => {
     });
   });
 });
+
+exports.getConditionValueSuggestions = functions.https.onRequest((request, response) => {
+  cors(request, response, () => {
+    // TODO
+    const datasetId = request.body.dataset || 'hacker_news'
+    const tableId = request.body.table || 'stories'
+    const columnName = request.body.column
+    const prefix = request.body.prefix
+    const projectId = 'bigquery-public-data'
+    const publicBigQuery = new BigQuery({ projectId })
+    const dataset = publicBigQuery.dataset(datasetId)
+    const table = dataset.table(tableId)
+
+    if (!columnName) {
+      response.status(400).send({ error: {
+        message: 'No Column Name'
+      }})
+    } else {
+      table.getMetadata()
+        .then(function(data) {
+          const metadata = data[0];
+          field = _.find(metadata.schema.fields, f => f.name === columnName)
+          if(field) {
+            const query = generateColumnValuesSuggestionQuery(columnName, `${projectId}.${datasetId}.${tableId}`)
+            const data = [];
+            bigquery.createQueryStream(query)
+              .on('error',(err) => {
+                response.send({ error: err })
+              })
+              .on('data', (row) => {
+                data.push(row);
+              })
+              .on('end', () => {
+                response.send({
+                  column: columnName,
+                  total_rows: metadata.numRows,
+                  type: field.type,
+                  values: data
+                })
+              });
+          }
+        });
+    }    
+
+  });
+});
+
+exports.getColumnDistribution = functions.https.onRequest((request, response) => {
+  cors(request, response, () => {
+    // TODO
+    
+  });
+});
+
+

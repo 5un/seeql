@@ -2,12 +2,12 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import * as d3 from 'd3'
 import _ from 'lodash'
-
 import CodeMirror from 'react-codemirror'
-import AxisSelect from '../components/axis-select'
 import Histogram from '../components/histogram'
-import ScatterPlot from '../components/scatter-plot'
+import BigQueryHintDatasource from '../lib/bigquery-hint-datasource'
 import { registerCustomSQLHint } from '../lib/custom-sql-hint'
+
+const bigqueryHintDatasource = new BigQueryHintDatasource();
 
 export default class QueryEditor extends React.Component {
 
@@ -19,7 +19,6 @@ export default class QueryEditor extends React.Component {
             codeMirror: null,
             embeddedVisualizations: []
         }
-
     }
 
     componentDidMount() {
@@ -37,7 +36,7 @@ export default class QueryEditor extends React.Component {
     handleCodeMirrorRef(codeMirrorRef) {
 
         if(codeMirrorRef) {
-            registerCustomSQLHint(codeMirrorRef.getCodeMirrorInstance())
+            registerCustomSQLHint(codeMirrorRef.getCodeMirrorInstance(), bigqueryHintDatasource)
 
             const codeMirror = codeMirrorRef.codeMirror
             if(this.state.codeMirror == null) {
@@ -87,7 +86,7 @@ export default class QueryEditor extends React.Component {
         const { scriptLoaded, embeddedVisualizations } = this.state
         const options = {
             lineNumbers: true,
-            mode: 'text/x-sql'
+            mode: 'text/x-mysql'
         };
         return (
             <div style={{ position: 'relative' }}>

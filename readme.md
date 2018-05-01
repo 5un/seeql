@@ -5,7 +5,7 @@
 * [DONE] Check integrations with React
 * Extract schema from BigQuery and put as static config
   https://bigquery.cloud.google.com/queries/see-ql
-  
+
 * Pickup table names and column names in grave accent
 * detect if the var is after an operator and a column
 * detect the type of that column 
@@ -52,3 +52,8 @@ https://github.com/dbcli/pgcli
 https://www.jetbrains.com/datagrip/
 
 https://bl.ocks.org/mbostock/34f08d5e11952a80609169b7917d4172
+
+## Token Traverse Test Cases
+
+https://stackoverflow.com/questions/15464574/use-google-bigquery-to-build-histogram-graph
+
