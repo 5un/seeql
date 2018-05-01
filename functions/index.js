@@ -81,10 +81,11 @@ exports.getConditionValueSuggestions = functions.https.onRequest((request, respo
       }})
     } else {
       table.getMetadata()
-        .then(function(data) {
+        .then((data) => {
           const metadata = data[0];
           field = _.find(metadata.schema.fields, f => f.name === columnName)
           if(field) {
+            
             const query = generateColumnValuesSuggestionQuery(columnName, `${projectId}.${datasetId}.${tableId}`)
             const data = [];
             bigquery.createQueryStream(query)
@@ -102,6 +103,13 @@ exports.getConditionValueSuggestions = functions.https.onRequest((request, respo
                   values: data
                 })
               });
+
+          } else {
+
+            response.status(400).send({ error: {
+              message: 'Column not found'
+            }})
+            
           }
         });
     }    

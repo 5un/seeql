@@ -42,8 +42,13 @@ export default class QueryEditor extends React.Component {
             if(this.state.codeMirror == null) {
                 this.setState({ codeMirror })
             }
-            codeMirror.on('keypress', (cm, event) => {
+
+            const debounced = _.debounce((cm, event) => {
                 cm.showHint({ completeSingle: false })
+            }, 300)
+
+            codeMirror.on('keypress', (cm, event) => {
+                debounced(cm, event);
             })
         }
         
