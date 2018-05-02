@@ -1,0 +1,39 @@
+[debug] [2018-05-01T08:56:03.541Z] ----------------------------------------------------------------------
+[debug] [2018-05-01T08:56:03.544Z] Command:      /usr/local/Cellar/nvm/0.32.0/versions/node/v6.10.0/bin/node /usr/local/opt/nvm/versions/node/v6.10.0/bin/firebase serve --only functions
+[debug] [2018-05-01T08:56:03.545Z] CLI Version:  3.9.1
+[debug] [2018-05-01T08:56:03.545Z] Platform:     darwin
+[debug] [2018-05-01T08:56:03.545Z] Node Version: v6.10.0
+[debug] [2018-05-01T08:56:03.545Z] Time:         Tue May 01 2018 01:56:03 GMT-0700 (PDT)
+[debug] [2018-05-01T08:56:03.545Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-05-01T08:56:03.563Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-05-01T08:56:03.563Z] > authorizing via signed-in user
+[debug] [2018-05-01T08:56:03.565Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-05-01T08:56:03.565Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token { refresh_token: '1/ZHdZ573jEPyQxqBhD5F9JzpOdIkW13DVxoDKyjhQkBA',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Tue May 01 2018 01:56:03 GMT-0700 (PDT)
+[debug] [2018-05-01T08:56:03.973Z] <<< HTTP RESPONSE 200
+[debug] [2018-05-01T08:56:03.976Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/see-ql  
+ Tue May 01 2018 01:56:03 GMT-0700 (PDT)
+[debug] [2018-05-01T08:56:04.431Z] <<< HTTP RESPONSE 200
+[debug] [2018-05-01T08:56:04.433Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/see-ql/tokens  
+ Tue May 01 2018 01:56:04 GMT-0700 (PDT)
+[debug] [2018-05-01T08:56:07.552Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/Users/Sun/Documents/Study/MIMS/Courses/INFO-247/Final Projects/development/seeql'...
+[info] 
+[info] i  functions: Preparing to emulate HTTPS functions. Support for other event types coming soon.
+[debug] [2018-05-01T08:56:08.393Z] >>> HTTP REQUEST GET https://appengine.googleapis.com/v1/apps/see-ql  
+ Tue May 01 2018 01:56:08 GMT-0700 (PDT)
+[debug] [2018-05-01T08:56:08.394Z] >>> HTTP REQUEST GET https://apikeys.googleapis.com/v1/projects/see-ql/apiKeys  
+ Tue May 01 2018 01:56:08 GMT-0700 (PDT)
+[debug] [2018-05-01T08:56:08.762Z] <<< HTTP RESPONSE 200
+[debug] [2018-05-01T08:56:08.945Z] <<< HTTP RESPONSE 200
+[info] ✔  functions: helloWorld: http://localhost:5002/see-ql/us-central1/helloWorld
+[info] ✔  functions: getConditionValueSuggestions: http://localhost:5002/see-ql/us-central1/getConditionValueSuggestions
+[info] ✔  functions: getColumnDistribution: http://localhost:5002/see-ql/us-central1/getColumnDistribution
+[info] ✔  functions: executeQuery: http://localhost:5002/see-ql/us-central1/executeQuery
+[info] ✔  functions: getSchema: http://localhost:5002/see-ql/us-central1/getSchema

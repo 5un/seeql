@@ -16,6 +16,8 @@
 * Think about how to implement join
 * complex statement
     - see the whole WHERE clause and parse
+* subquery
+* having
 
 ## How to parse SQL
 https://www.devart.com/dbforge/sql/sqlcomplete/code-completion.html?gclid=CjwKCAjwt5DXBRAtEiwAa3vyEplbrxtaT3cmYEtBGxqJzgEDzwwcTuIPyJy1cy0PWgvnWyt-YDy_TxoC5roQAvD_BwE
@@ -56,4 +58,28 @@ https://bl.ocks.org/mbostock/34f08d5e11952a80609169b7917d4172
 ## Token Traverse Test Cases
 
 https://stackoverflow.com/questions/15464574/use-google-bigquery-to-build-histogram-graph
+
+```
+select
+  min(data.VAL) as min,
+  max(data.VAL) as max,
+  count(data.VAL) as num,
+  integer((data.VAL-value.min)/(value.max-value.min)*8) as group
+from [table] data
+CROSS JOIN (SELECT MAX(VAL) as max, MIN(VAL) as min, from [table]) value
+GROUP BY group
+ORDER BY group 
+```
+
+```
+select
+  min(score) as min,
+  max(score) as max,
+  count(score) as num,
+  CAST((score - value.min)/(value.max - value.min)*8 AS INT64) as grp
+from `bigquery-public-data.hacker_news.stories`
+CROSS JOIN (SELECT MAX(score) as max, MIN(score) as min from `bigquery-public-data.hacker_news.stories`) value
+GROUP BY grp
+ORDER BY grp 
+```
 

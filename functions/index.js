@@ -3,7 +3,8 @@ const BigQuery = require('@google-cloud/bigquery');
 const _ = require('lodash');
 // Your Google Cloud Platform project ID
 const projectId = 'see-ql';
-const { generateColumnValuesSuggestionQuery } = require('./helpers')
+const { generateColumnValuesSuggestionQuery,
+        generateBinningQuery } = require('./helpers')
 
 const cors = require('cors')({
   origin: true
@@ -12,19 +13,10 @@ const bigquery = new BigQuery({
   projectId: projectId,
 });
 
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-exports.helloWorld = functions.https.onRequest((request, response) => {
- response.send("Hello from Firebase!");
-});
-
 exports.executeQuery = functions.https.onRequest((request, response) => {
   cors(request, response, () => {
-    console.log(request.method);
-    console.log(request.body);  
-    const query = 'SELECT url FROM `bigquery-public-data.samples.github_nested` LIMIT 100';
 
+    const query = request.body.query || 'SELECT url FROM `bigquery-public-data.samples.github_nested` LIMIT 100';
     const data = [];
     bigquery.createQueryStream(query)
       .on('error',(err) => {
@@ -85,8 +77,13 @@ exports.getConditionValueSuggestions = functions.https.onRequest((request, respo
           const metadata = data[0];
           field = _.find(metadata.schema.fields, f => f.name === columnName)
           if(field) {
-            
-            const query = generateColumnValuesSuggestionQuery(columnName, `${projectId}.${datasetId}.${tableId}`)
+            let query 
+            const fullTableName = `${projectId}.${datasetId}.${tableId}`
+            if(field.type === 'INTEGER' || field.type === 'FLOAT') {
+              query = generateBinningQuery(columnName, fullTableName, 10)
+            } else {
+              query = generateColumnValuesSuggestionQuery(columnName, fullTableName)
+            }
             const data = [];
             bigquery.createQueryStream(query)
               .on('error',(err) => {
@@ -109,13 +106,52 @@ exports.getConditionValueSuggestions = functions.https.onRequest((request, respo
             response.status(400).send({ error: {
               message: 'Column not found'
             }})
-            
+
           }
         });
     }    
 
   });
 });
+
+exports.getJoinValueCheck = functions.https.onRequest((request, response) => {
+  cors(request, response, () => {
+    // TODO
+    const datasetId = request.body.dataset || 'hacker_news'
+    const leftTable = request.body.leftTable 
+    const leftColumn = request.body.leftColumn
+    const rightTable = request.body.rightTable
+    const rightColumn = request.body.rightColumn
+
+    const projectId = 'bigquery-public-data'
+    const publicBigQuery = new BigQuery({ projectId })
+    const dataset = publicBigQuery.dataset(datasetId)
+    const table = dataset.table(tableId)
+
+    if (!leftTable || !leftColumn || !rightTable || !rightColumn) {
+      response.status(400).send({ error: {
+        message: 'Missing leftTable, leftColumn, rightTable, or rightColumn'
+      }})
+    } else {
+      
+
+      table.getMetadata()
+        .then((data) => {
+          const metadata = data[0];
+          leftField = _.find(metadata.schema.fields, f => f.name === leftColumn)
+          rightField = _.find(metadata.schema.fields, f => f.name === rightColumn)
+          if(leftField && rightField) {
+            
+          } else {
+            response.status(400).send({ error: {
+              message: 'Columns not found'
+            }})
+          }
+        });
+    }
+    
+  });
+}); 
 
 exports.getColumnDistribution = functions.https.onRequest((request, response) => {
   cors(request, response, () => {

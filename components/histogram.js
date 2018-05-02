@@ -53,7 +53,6 @@ export default class Histogram extends React.Component {
             .attr("transform", (d) => ("translate(" + x(d.x0) + "," + y(d.length) + ")") )
             .style("fill", "#8569E1")
 
-
         bar.append("rect")
             .attr("x", 1)
             .attr("width", x(bins[0].x1) - x(bins[0].x0) - 1)
@@ -63,7 +62,7 @@ export default class Histogram extends React.Component {
             .attr("class", "axis axis--x")
             .attr("transform", "translate(0," + height + ")")
             .call(d3.axisBottom(x).ticks(6))
-            
+        
     }
 
     render() {

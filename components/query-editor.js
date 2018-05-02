@@ -3,9 +3,12 @@ import ReactDOM from 'react-dom'
 import * as d3 from 'd3'
 import _ from 'lodash'
 import CodeMirror from 'react-codemirror'
+import sqliteParser from 'sqlite-parser'
 import Histogram from '../components/histogram'
+import TableMappingDiagram from '../components/table-mapping-diagram'
 import BigQueryHintDatasource from '../lib/bigquery-hint-datasource'
 import { registerCustomSQLHint } from '../lib/custom-sql-hint'
+import { findTopLevelJoinStatement } from '../lib/helpers'
 
 const bigqueryHintDatasource = new BigQueryHintDatasource();
 
@@ -44,6 +47,27 @@ export default class QueryEditor extends React.Component {
             }
 
             const debounced = _.debounce((cm, event) => {
+                // TODO Check for parsing status here
+                sqliteParser(cm.getValue(), (err, ast) => {
+                    if(!err) {
+                        //console.log('parsed', ast)
+                        const joinStmt = findTopLevelJoinStatement(ast)
+                        if(joinStmt) {
+                            // console.log(joinStmt)
+                            // fetch join visualization
+                                // mark the text
+                                // Add the viz to viz list
+                            
+                            this.addJoinStatementVisualization(joinStmt)
+
+
+                        }
+                    } else {
+                        // Fail silenly console.error(err)
+                        
+                    }
+                })
+
                 cm.showHint({ completeSingle: false })
             }, 300)
 
@@ -56,11 +80,56 @@ export default class QueryEditor extends React.Component {
 
     handleCodeChanged(newValue) {
         const { codeMirror } = this.state
+        const { onChange } = this.props
         const allMarks = codeMirror.getAllMarks()
         this.setState({ 
             code: newValue, 
             embeddedVisualizations: allMarks 
         })
+
+        if(onChange) {
+            onChange(newValue)
+        }
+    }
+
+    addJoinStatementVisualization(joinStmt) {
+        console.log('add join stmt')
+        console.log(joinStmt)
+        let isCompleteJoinStmt = false
+        if(joinStmt.map.length > 0 && joinStmt.map[0].constraint) {
+            if(joinStmt.map[0].constraint.on && joinStmt.map[0].constraint.on.left && joinStmt.map[0].constraint.on.right) {
+                isCompleteJoinStmt = true
+            }
+        }
+
+        const { codeMirror, embeddedVisualizations } = this.state
+        const idx = codeMirror.getValue().toLowerCase().indexOf(" join ")
+
+        if(idx != -1 && isCompleteJoinStmt && embeddedVisualizations.length == 0) {
+            var start = codeMirror.posFromIndex(idx)
+            var end = codeMirror.posFromIndex(idx + " join ".length)
+
+            var vizPlaceholder = document.createElement("text")
+            vizPlaceholder.innerHTML = codeMirror.getRange(start, end)
+            vizPlaceholder.style.height = "100px"
+            vizPlaceholder.style.display = "inline-block"
+            vizPlaceholder.style.verticalAlign = "top"
+            vizPlaceholder.setAttribute('data-viztype', 'tableMapping')
+
+            const marker = codeMirror.markText(start, end, {
+                replacedWith: vizPlaceholder
+            });
+
+            const tableMappingData = 
+                [
+                    { name: "stories", mapped: 483737, unmapped: 1476072 },
+                    { name: "comments", mapped: 2620593, unmapped: 5778824 }
+                ]
+
+            const allMarks = codeMirror.getAllMarks()
+            this.setState({ embeddedVisualizations: allMarks, tableMappingData })
+        }
+
     }
 
     testMarkElem() {
@@ -73,6 +142,7 @@ export default class QueryEditor extends React.Component {
         vizPlaceholder.style.height = "70px"
         vizPlaceholder.style.display = "inline-block"
         vizPlaceholder.style.verticalAlign = "top"
+        vizPlaceholder.setAttribute('data-viztype', 'histogram')
 
         const marker = codeMirror.markText(start, end, {
             replacedWith: vizPlaceholder
@@ -88,7 +158,7 @@ export default class QueryEditor extends React.Component {
     }
 
     render() {
-        const { scriptLoaded, embeddedVisualizations } = this.state
+        const { scriptLoaded, embeddedVisualizations, tableMappingData } = this.state
         const options = {
             lineNumbers: true,
             mode: 'text/x-mysql'
@@ -107,10 +177,17 @@ export default class QueryEditor extends React.Component {
                     <div key={viz.id}
                         style={{ position: 'absolute', 
                             left: viz.widgetNode.offsetLeft + 'px', 
-                            top: viz.widgetNode.offsetTop + '16' + 'px',
+                            top: viz.widgetNode.offsetTop + '30' + 'px',
                             zIndex: 1000 }}>
-                        <Histogram data={[1,2,3,4,4,5,5,6,6,6,7,7,8,8,9,10]} 
+                        {/*
+                            viz.widgetNode.getAttribute('data-viztype') == 'historgram' &&
+                            <Histogram data={[1,2,3,4,4,5,5,6,6,6,7,7,8,8,9,10]} 
                             width={150} height={50}/>
+                        */}
+                        
+                        <TableMappingDiagram width={200} height={100} data={tableMappingData}/>
+                        
+                        
                     </div>
                 ))}
                 

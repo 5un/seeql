@@ -28,23 +28,28 @@ export default class Index extends React.Component {
       variables: [],
       xPreviewValues: [],
       yPreviewValues: [],
-      isFrontEnd: false
+      isFrontEnd: false,
+      query: ''
     }
   }
 
   handleExecuteQueryClicked() {
-    // this.setState({ queryLoading: true })
-    // superagent.get(`${config.API_URL}/executeQuery`)
-    //   .then(res => {
-    //     const columns = _.keys(res.body[0]).map(k => ({ Header: k, accessor: k }))
-    //     this.setState({ queryResults: res.body, queryResultColums: columns })
-    //   })
-    //   .catch(err => {
-    //     this.setState({ error: err })
-    //   })
+    const { query } = this.state
 
-    this.QueryEditorRef.testMarkElem();
+    this.setState({ queryLoading: true })
+    superagent.post(`${config.API_URL}/executeQuery`)
+      .send({ query })
+      .then(res => {
+        const columns = _.keys(res.body[0]).map(k => ({ Header: k, accessor: k }))
+        this.setState({ queryResults: res.body, queryResultColums: columns })
+      })
+      .catch(err => {
+        this.setState({ error: err })
+      })
+  }
 
+  handleCodeChanged(query) {
+    this.setState({ query })
   }
 
   render() {
@@ -64,13 +69,12 @@ export default class Index extends React.Component {
           <MainContainer>
             <H3>QUERY</H3><br />
             <QueryContainer>
-              <QueryEditor ref={(ref) => this.QueryEditorRef = ref }/>
+              <QueryEditor ref={(ref) => this.QueryEditorRef = ref } onChange={this.handleCodeChanged.bind(this)}/>
             </QueryContainer>
             <br /><br />
             <div>
               <Button onClick={this.handleExecuteQueryClicked.bind(this)}>Execute Query</Button>
             </div>
-            
             {queryResults && 
               <ReactTable
                 data={queryResults}
