@@ -82,8 +82,10 @@ exports.getConditionValueSuggestions = functions.https.onRequest((request, respo
             if(field.type === 'INTEGER' || field.type === 'FLOAT') {
               query = generateBinningQuery(columnName, fullTableName, 10)
             } else {
-              query = generateColumnValuesSuggestionQuery(columnName, fullTableName)
+              query = generateColumnValuesSuggestionQuery(columnName, fullTableName, prefix)
             }
+            console.log(query)
+
             const data = [];
             bigquery.createQueryStream(query)
               .on('error',(err) => {

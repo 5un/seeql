@@ -1,5 +1,10 @@
-exports.generateColumnValuesSuggestionQuery = (columnName, table) => {
-  return `select \`${columnName}\` as value, count(1) as row_count from \`${table}\` group by \`${columnName}\` order by row_count DESC limit 10`
+
+exports.generateColumnValuesSuggestionQuery = (columnName, table, prefix) => {
+  if(prefix) {
+    return `select \`${columnName}\` as value, count(1) as row_count from \`${table}\` where \`${columnName}\` like '${prefix}%' group by \`${columnName}\` order by row_count DESC limit 10`
+  } else {
+    return `select \`${columnName}\` as value, count(1) as row_count from \`${table}\` group by \`${columnName}\` order by row_count DESC limit 10`
+  }
 }
 
 exports.generateBinningQuery = (columnName, table, numBins) => {

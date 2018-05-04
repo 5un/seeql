@@ -79,16 +79,15 @@ export default class QueryEditor extends React.Component {
                                 // Add the viz to viz list
                             
                             this.addJoinStatementVisualization(joinStmt)
-
+                            
 
                         }
                     } else {
                         // Fail silenly console.error(err)
                         
                     }
-                })
-
-                cm.showHint({ completeSingle: false, tables: autoCompletionNames })
+                    cm.showHint({ completeSingle: false, tables: autoCompletionNames, ast })
+                })  
             }, 300)
 
             codeMirror.on('keypress', (cm, event) => {
