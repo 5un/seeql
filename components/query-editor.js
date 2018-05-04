@@ -12,6 +12,26 @@ import { findTopLevelJoinStatement } from '../lib/helpers'
 
 const bigqueryHintDatasource = new BigQueryHintDatasource();
 
+const autoCompletionNames = [
+    { text: 'stories' },
+    { text: 'comments' },
+    { text: 'full' },
+    { text: 'full_201510' },
+    { text: 'id' },
+    { text: 'score' },
+    { text: 'time' },
+    { text: 'time_ts' },
+    { text: 'title' },
+    { text: 'url' },
+    { text: 'deleted' },
+    { text: 'dead' },
+    { text: 'descendants' },
+    { text: 'author' },
+    { text: 'parent' },
+    { text: 'ranking' }
+
+]
+
 export default class QueryEditor extends React.Component {
 
     constructor(props) {
@@ -68,7 +88,7 @@ export default class QueryEditor extends React.Component {
                     }
                 })
 
-                cm.showHint({ completeSingle: false })
+                cm.showHint({ completeSingle: false, tables: autoCompletionNames })
             }, 300)
 
             codeMirror.on('keypress', (cm, event) => {
@@ -122,8 +142,8 @@ export default class QueryEditor extends React.Component {
 
             const tableMappingData = 
                 [
-                    { name: "stories", mapped: 483737, unmapped: 1476072 },
-                    { name: "comments", mapped: 2620593, unmapped: 5778824 }
+                    { name: "stories.id", mapped: 483737, unmapped: 1476072 },
+                    { name: "comments.parents", mapped: 2620593, unmapped: 5778824 }
                 ]
 
             const allMarks = codeMirror.getAllMarks()
