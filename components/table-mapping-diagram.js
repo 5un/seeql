@@ -92,6 +92,18 @@ export default class TableMappingDiagram extends React.Component {
                     ctx.fill()
                 }
 
+                ctx.fillStyle = '#222222'
+                ctx.font = "8px Arial"
+                ctx.fillText('' + d.mapped, 
+                                margin.left + (i * (width / ds.length)) + 5, 
+                                d.barMarginTop + 10,
+                                200)
+
+                ctx.fillText('' + d.unmapped, 
+                                margin.left + (i * (width / ds.length)) + 5, 
+                                d.barMarginTop + d.barMappedHeight + 20,
+                                200)
+
 
 
             })

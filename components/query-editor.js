@@ -12,11 +12,14 @@ import { findTopLevelJoinStatement } from '../lib/helpers'
 
 const bigqueryHintDatasource = new BigQueryHintDatasource();
 
-const autoCompletionNames = [
+const autoCompletionTables = [
     { text: 'stories' },
     { text: 'comments' },
     { text: 'full' },
     { text: 'full_201510' },
+]
+
+const autoCompletionColumns = [
     { text: 'id' },
     { text: 'score' },
     { text: 'time' },
@@ -28,9 +31,10 @@ const autoCompletionNames = [
     { text: 'descendants' },
     { text: 'author' },
     { text: 'parent' },
-    { text: 'ranking' }
-
+    { text: 'ranking' },
 ]
+
+
 
 export default class QueryEditor extends React.Component {
 
@@ -86,7 +90,11 @@ export default class QueryEditor extends React.Component {
                         // Fail silenly console.error(err)
                         
                     }
-                    cm.showHint({ completeSingle: false, tables: autoCompletionNames, ast })
+                    cm.showHint({   completeSingle: false, 
+                                    tables: autoCompletionTables, 
+                                    columns: autoCompletionColumns,
+                                    ast
+                                })
                 })  
             }, 300)
 
